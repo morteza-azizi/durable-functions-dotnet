@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableFunction", "DurableFunction\DurableFunction.csproj", "{CF5EB55B-523D-4FDF-AA52-3FE1C48E6E15}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{A7B0FB6B-817B-4593-A7F2-0F7E34B65280}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{02AB5FDA-9B50-434B-8E12-B3F53DD93B46}"
@@ -13,22 +11,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4779FFE9-445
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E313A757-0C4D-4D14-9E86-E9F2981D8F14}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DurableFunction", "src\DurableFunction\DurableFunction.csproj", "{4CC4728A-3B76-4637-858D-B226FD0360C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CF5EB55B-523D-4FDF-AA52-3FE1C48E6E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF5EB55B-523D-4FDF-AA52-3FE1C48E6E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF5EB55B-523D-4FDF-AA52-3FE1C48E6E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF5EB55B-523D-4FDF-AA52-3FE1C48E6E15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CC4728A-3B76-4637-858D-B226FD0360C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CC4728A-3B76-4637-858D-B226FD0360C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CC4728A-3B76-4637-858D-B226FD0360C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CC4728A-3B76-4637-858D-B226FD0360C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CF5EB55B-523D-4FDF-AA52-3FE1C48E6E15} = {4779FFE9-4452-4B92-9CD0-172348F9604F}
+		{4CC4728A-3B76-4637-858D-B226FD0360C0} = {4779FFE9-4452-4B92-9CD0-172348F9604F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C73AC60-93BB-4B6F-83D3-33335051ADED}
