@@ -1,39 +1,64 @@
+using DurableFunction.Models;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.WebJobs;
 using Microsoft.DurableTask;
+using Microsoft.DurableTask.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace DurableFunction.Functions
 {
-    public static class OrchestratorFunction
+    public class OrchestratorFunction
     {
         [Function("OrchestratorFunction")]
-        public static async Task RunOrchestrator(
-            [OrchestrationTrigger] TaskOrchestrationContext context, ILogger log)
+        public async Task RunOrchestrator(
+            [OrchestrationTrigger] TaskOrchestrationContext context)
         {
-            log.LogInformation($"OrchestratorFunction called with ID = '{context.InstanceId}'.");
-
-            var eventName = context.GetInput<string>();
-            if (eventName == "NewInventoryMessageReceivedEvent")
+            var @event = await context.WaitForExternalEvent<InventoryEvent>("InventoryEventReceived");
+            if (@event.TransactionNumber == context.InstanceId)
             {
-                bool isLastMessageReceived = await context.CallActivityAsync<bool>("IsLastMessageReceivedActivityFunction");
+                var entityInstanceId = new EntityInstanceId("IsLastMessageReceivedEntityFunction", context.InstanceId);
 
-                if (!isLastMessageReceived)
+                if (await context.Entities.CallEntityAsync<bool>(entityInstanceId, operationName: "IsLastMessageReceivedActivity",
+                    input: new IsLastMessageReceivedActivityFunctionInput()
+                    {
+                        Id = @event.TransactionNumber,
+                    }))
                 {
-                    await context.CallActivityAsync<bool>("UploadToFtpActivityFunction");
+                    Console.WriteLine($"Last Message Arrived, lets consolidate data and upload csv file.");
                 }
             }
         }
 
-        [FunctionName("IsLastMessageReceivedActivityFunction")]
-        public static bool IsLastMessageReceivedActivityFunction([ActivityTrigger] ILogger log)
+        [Function("IsLastMessageReceivedEntityFunction")]
+        public Task DispatchAsync([EntityTrigger] TaskEntityDispatcher dispatcher)
         {
-            // add the logic if all pages arrived
-            return true;
+            return dispatcher.DispatchAsync(operation =>
+            {
+                // for the first time no state been set, so set it to false
+                if (operation.State.GetState(typeof(bool)) is null)
+                {
+                    operation.State.SetState(false);
+                }
+
+                switch (operation.Name)
+                {
+                    case "IsLastMessageReceivedActivity":
+                        bool state = operation.State.GetState<bool>();
+                        if (state) return new(false);
+                        operation.State.SetState(true);
+                        return new(true);
+                }
+
+                return default;
+            });
         }
 
-        [FunctionName("UploadToFtpActivityFunction")]
-        public static void UploadToFtpActivityFunction([ActivityTrigger] ILogger log)
+        public class IsLastMessageReceivedActivityFunctionInput
+        {
+            public string Id { get; set; } = default!;
+        }
+
+        [Function("UploadToFtpActivityFunction")]
+        public void UploadToFtpActivityFunction([ActivityTrigger] ILogger log)
         {
             //upload the file content into Sftp
         }
