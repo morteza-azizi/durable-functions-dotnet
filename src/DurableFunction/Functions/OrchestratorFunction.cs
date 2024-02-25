@@ -8,7 +8,7 @@ namespace DurableFunction.Functions
 {
     public class OrchestratorFunction
     {
-        [Function("OrchestratorFunction")]
+        [Function(nameof(OrchestratorFunction))]
         public async Task RunOrchestrator(
             [OrchestrationTrigger] TaskOrchestrationContext context)
         {
@@ -60,7 +60,7 @@ namespace DurableFunction.Functions
         [Function("UploadToFtpActivityFunction")]
         public void UploadToFtpActivityFunction([ActivityTrigger] ILogger log)
         {
-            //upload the file content into Sftp
+            //upload the file content into Sftp / IO bounded task
         }
     }
 }
