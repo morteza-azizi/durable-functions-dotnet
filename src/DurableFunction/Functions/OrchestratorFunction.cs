@@ -17,6 +17,7 @@ namespace DurableFunction.Functions
             {
                 var entityInstanceId = new EntityInstanceId("IsLastMessageReceivedEntityFunction", context.InstanceId);
 
+                // TODO: Consider enhancing this to support multi-page events by passing the entire event object
                 if (await context.Entities.CallEntityAsync<bool>(entityInstanceId, operationName: "IsLastMessageReceivedActivity",
                     input: new IsLastMessageReceivedActivityFunctionInput()
                     {
@@ -42,6 +43,11 @@ namespace DurableFunction.Functions
                 switch (operation.Name)
                 {
                     case "IsLastMessageReceivedActivity":
+                        // ENHANCEMENT OPPORTUNITY: For multi-page events, this could be enhanced to:
+                        // 1. Track the TotalPages from the InventoryEvent
+                        // 2. Keep a record of which specific pages have been received 
+                        // 3. Only return true when all expected pages (1 to TotalPages) have been received
+                        // 4. Use a custom state object instead of a simple boolean flag
                         bool state = operation.State.GetState<bool>();
                         if (state) return new(false);
                         operation.State.SetState(true);
@@ -55,6 +61,7 @@ namespace DurableFunction.Functions
         public class IsLastMessageReceivedActivityFunctionInput
         {
             public string Id { get; set; } = default!;
+            // ENHANCEMENT: Add InventoryEvent property to support multi-page tracking
         }
 
         [Function("UploadToFtpActivityFunction")]
